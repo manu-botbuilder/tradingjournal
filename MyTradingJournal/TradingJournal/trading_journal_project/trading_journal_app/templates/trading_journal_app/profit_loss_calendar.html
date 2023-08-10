@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.min.js"
+      integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+      crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-v4-grid-only@1.0.0/dist/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="{% static 'trading_journal_app/fontawesome/css/all.min.css' %}"> <!-- https://fontawesome.com/ -->
+	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/ -->
+    <link href="{% static 'trading_journal_app/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'trading_journal_app/css/templatemo-xtra-blog.css' %}" rel="stylesheet">
+<!--
+
+TemplateMo 553 Xtra Blog
+
+https://templatemo.com/tm-553-xtra-blog
+
+-->
+    <title>Calendar</title>
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 10px;
+  float: right;
+  margin-right: 30px;
+  margin-top: 50px;
+  box-shadow: blue 0px 0px 0px 2px inset, rgb(255, 255, 255) 10px -10px 0px -3px, rgb(31, 193, 27) 10px -10px, rgb(255, 255, 255) 20px -20px 0px -3px, rgb(255, 217, 19) 20px -20px, rgb(255, 255, 255) 30px -30px 0px -3px, rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+.center {
+    margin: auto;
+    width: 60%;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.hideform {
+    display: none;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700');
+
+$base-spacing-unit: 24px;
+$half-spacing-unit: $base-spacing-unit / 2;
+
+$color-alpha: #1772FF;
+$color-form-highlight: #EEEEEE;
+
+*, *:before, *:after {
+	box-sizing:border-box;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  box-shadow: rgba(0, 153, 20, 0.4) 5px 5px, rgba(0, 153, 20, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
+}
+
+th {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  background-color: black;
+  color:white;
+  font-family:"Lucida Console";
+}
+
+td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-family:"Lucida Console";
+  background-color: white;
+}
+
+td:hover {
+background-color: coral;
+}
+
+.button {
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: blue;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+</style>
+
+</head>
+<body>
+	<header class="tm-header" id="tm-header" style="background-color: #330aeb">
+        <div class="tm-header-wrapper">
+            <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="tm-site-header">
+<!--                <div class="mb-3 mx-auto tm-site-logo"><img  style="width:90%" src="C:\\Users\\Manu\\Downloads\\Novice.jpg" alt="Trade Screenshot"></div>-->
+                <h1 class="text-center">PowerOfJournal</h1>
+            </div>
+            <nav class="tm-nav" id="tm-nav">
+                <ul>
+                    <li class="tm-nav-item"><a href="/" class="tm-nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard
+                    </a></li>
+                    <li class="tm-nav-item "><a href="/trades" class="tm-nav-link">
+                        <i class="fas fa-pen"></i>
+                        My Trades
+                    </a></li>
+                    <li class="tm-nav-item active"><a href="/profit_loss_calendar" class="tm-nav-link">
+                        <i class="fas fa-calendar"></i>
+                        P&L Calender
+                    </a></li>
+
+                </ul>
+            </nav>
+<!--            <div class="tm-mb-65">-->
+<!--                <a rel="nofollow" href="https://fb.com/templatemo" class="tm-social-link">-->
+<!--                    <i class="fab fa-facebook tm-social-icon"></i>-->
+<!--                </a>-->
+<!--                <a href="https://twitter.com" class="tm-social-link">-->
+<!--                    <i class="fab fa-twitter tm-social-icon"></i>-->
+<!--                </a>-->
+<!--                <a href="https://instagram.com" class="tm-social-link">-->
+<!--                    <i class="fab fa-instagram tm-social-icon"></i>-->
+<!--                </a>-->
+<!--                <a href="https://linkedin.com" class="tm-social-link">-->
+<!--                    <i class="fab fa-linkedin tm-social-icon"></i>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--            <p class="tm-mb-80 pr-5 text-white">-->
+<!--                Xtra Blog is a multi-purpose HTML template from TemplateMo website. Left side is a sticky menu bar. Right side content will scroll up and down.-->
+<!--            </p>-->
+        </div>
+    </header>
+    <body>
+    <div class="container" >
+        <h1 class="mb-4">Proft & Loss</h1>
+
+
+        <h2>Per Day P & L</h2>
+        <h6>(without charges)</h6>
+        <div class="table-responsive">
+            <table class="table table-bordered" style="width:100%; border: solid">
+                <thead style="border: solid">
+                    <tr style="border: solid">
+                        <th style="border: solid">Date</th>
+                        <th style="border: solid">P & L</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                {% for key, values in profit_loss_dict.items reversed %}
+                    <tr style="border: solid">
+
+                        <td style="width:12.5%; color: black; border: solid black"><b>{{ key }}</b></td>
+                        {% if values > 0 %}
+                        <td style="width:12.5%; color:green; border: solid black"><b>{{ values }}</b></td>
+                        {% else %}
+                            <td style="width:12.5%; color:red; border: solid black"><b>{{ values }}</b></td>
+                        {% endif %}
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    </body>
+
+    <script src="{% static 'trading_journal_app/js/jquery.min.js' %}"></script>
+    <script src="{% static 'trading_journal_app/js/templatemo-script.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+$('#show').on('click', function () {
+    $('.center').show();
+    $(this).hide();
+})
+
+$('#close').on('click', function () {
+    $('.center').hide();
+    $('#show').show();
+})
+
+</script>
+</body>
+</html>
+
