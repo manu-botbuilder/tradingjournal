@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trade Charts</title>
+    <a href="/" class="btn btn-primary">Back to Homepage</a>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .chart-container {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Trade Charts</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Pie Chart - Number of Profits and Losses</h2>
+                <div class="chart-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+
+                <h2>Line Chart - Profits and Losses Over Time</h2>
+                <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Bar Chart - Profits and Losses by Strategy</h2>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+
+                <h2>Scatter Plot - Entry vs Exit Prices</h2>
+                <div class="chart-container">
+                    <canvas id="scatterChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Histogram - Profits and Losses Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="histogramChart"></canvas>
+                </div>
+
+                <h2>Candlestick Chart</h2>
+                <div class="chart-container">
+                    <canvas id="candlestickChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Area Chart - Cumulative Profits and Losses</h2>
+                <div class="chart-container">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Pie Chart
+    var ctxPie = document.getElementById('pieChart').getContext('2d');
+    var labelsPie = JSON.parse('{{ labels_pie|safe }}');
+    var valuesPie = JSON.parse('{{ values_pie|safe }}');
+
+    new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: labelsPie,
+            datasets: [{
+                data: valuesPie,
+                backgroundColor: ['green', 'red'],
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Number of Profits and Losses'
+            }
+        }
+    });
+
+    // Line Chart
+    var ctxLine = document.getElementById('lineChart').getContext('2d');
+    var datesLine = JSON.parse('{{ dates_line|safe }}');
+    var profitsLine = JSON.parse('{{ profits_line|safe }}');
+    var lossesLine = JSON.parse('{{ losses_line|safe }}');
+
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: datesLine,
+            datasets: [
+                {
+                    label: 'Profits',
+                    data: profitsLine,
+                    borderColor: 'green',
+                    fill: false,
+                },
+                {
+                    label: 'Losses',
+                    data: lossesLine,
+                    borderColor: 'red',
+                    fill: false,
+                }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Profits and Losses Over Time'
+            }
+        }
+    });
+
+    // Bar Chart
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var strategies = JSON.parse('{{ strategies|safe }}');
+    var profitsBar = JSON.parse('{{ profits_bar|safe }}');
+    var lossesBar = JSON.parse('{{ losses_bar|safe }}');
+
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: strategies,
+            datasets: [
+                {
+                    label: 'Profits',
+                    data: profitsBar,
+                    backgroundColor: 'green',
+                },
+                {
+                    label: 'Losses',
+                    data: lossesBar,
+                    backgroundColor: 'red',
+                }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Profits and Losses by Strategy'
+            }
+        }
+    });
+
+    // Scatter Plot
+    var ctxScatter = document.getElementById('scatterChart').getContext('2d');
+    var entryPrices = JSON.parse('{{ entry_prices|safe }}');
+    var exitPrices = JSON.parse('{{ exit_prices|safe }}');
+
+    new Chart(ctxScatter, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Entry vs Exit Prices',
+                data: entryPrices.map((price, index) => ({ x: price, y: exitPrices[index] })),
+                backgroundColor: 'blue',
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Entry vs Exit Prices'
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom'
+                },
+                y: {
+                    type: 'linear',
+                }
+            }
+        }
+    });
+
+    // Histogram
+    var ctxHistogram = document.getElementById('histogramChart').getContext('2d');
+    var profitsHistogram = JSON.parse('{{ profits_histogram|safe }}');
+    var lossesHistogram = JSON.parse('{{ losses_histogram|safe }}');
+
+    new Chart(ctxHistogram, {
+        type: 'bar',
+        data: {
+            labels: [...Array(profitsHistogram.length).keys()].map(x => x.toString()),
+            datasets: [
+                {
+                    label: 'Profits',
+                    data: profitsHistogram,
+                    backgroundColor: 'green',
+                },
+                {
+                    label: 'Losses',
+                    data: lossesHistogram,
+                    backgroundColor: 'red',
+                }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Profits and Losses Distribution'
+            }
+        }
+    });
+
+    // Candlestick Chart
+    var ctxCandlestick = document.getElementById('candlestickChart').getContext('2d');
+    var datasetCandlestick = JSON.parse('{{ candlestick_dataset|safe }}');
+
+    new Chart(ctxCandlestick, {
+        type: 'candlestick',
+        data: {
+            datasets: [{
+                label: 'Candlestick Chart',
+                data: datasetCandlestick,
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Candlestick Chart'
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    }
+                }
+            }
+        }
+    });
+
+    // Area Chart
+    var ctxArea = document.getElementById('areaChart').getContext('2d');
+    var cumulativeProfits = JSON.parse('{{ cumulative_profits|safe }}');
+    var cumulativeLosses = JSON.parse('{{ cumulative_losses|safe }}');
+
+    new Chart(ctxArea, {
+        type: 'line',
+        data: {
+            labels: {{ dates_line|safe }},
+            datasets: [
+                {
+                    label: 'Cumulative Profits',
+                    data: cumulativeProfits,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                    fill: true,
+                },
+                {
+                    label: 'Cumulative Losses',
+                    data: cumulativeLosses,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                    fill: true,
+                }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Cumulative Profits and Losses'
+            }
+        }
+    });
+    // Helper function for generating random numbers within a range
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+</script>
+
+</body>
+</html>
